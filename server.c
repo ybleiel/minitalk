@@ -6,7 +6,7 @@
 /*   By: ybleiel <ybleiel@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 12:21:46 by ybleiel           #+#    #+#             */
-/*   Updated: 2022/02/28 16:56:39 by ybleiel          ###   ########.fr       */
+/*   Updated: 2022/03/01 16:14:28 by ybleiel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ void	ft_putstr(char *str)
 	}
 }
 
-void	sigusr_input0()
+static void	sigusr_input1()
 {
-	printf("0");
+	ft_putchar('1');
 }
 
-void	sigusr_input1()
+static void	sigusr_input0()
 {
-	printf("1");
+	ft_putchar('0');
 }
 
 int main()
@@ -74,8 +74,8 @@ int main()
 	pid = getpid();
 	ft_putnbr(pid);
 	ft_putchar('\n');
-	signal(SIGUSR1, sigusr_input0);
-	signal(SIGUSR2, sigusr_input1);
+	signal(SIGUSR1, sigusr_input1);
+	signal(SIGUSR2, sigusr_input0);
 	while (1)
 		pause();
 }

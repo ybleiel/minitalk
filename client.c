@@ -6,7 +6,7 @@
 /*   By: ybleiel <ybleiel@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 13:17:46 by ybleiel           #+#    #+#             */
-/*   Updated: 2022/02/28 16:57:54 by ybleiel          ###   ########.fr       */
+/*   Updated: 2022/03/01 16:14:49 by ybleiel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,29 +43,32 @@ int	ft_atoi(const char *str)
 
 void	str_to_binary(char *str, int pid)
 {
-	int len;
-	char *binary;
-	int i;
-	int j;
-	char c;
+	unsigned char	mask;
+	int 			i;
 
-    len = strlen(str);
-    binary = malloc(len*8 + 1);
 	i = 0;
-    binary[0] = '\0';
 	if(str == NULL)
 		exit(0);
-	while (++i < len)
+	while (str[i])
 	{
-		c = str[i];
-		while (j >= 0)
+		mask = 0b10000000;
+		while (mask)
 		{
-			if (c & (1 << j))
+			if (mask & str[i])
 				kill(pid, SIGUSR1);
 			else 
 				kill(pid, SIGUSR2);
+			usleep(2000);
+			mask >>= 1;
 		}
+	i++;
 	}
+	// i = 0;
+	// while (i < 8)
+	// {
+	// 	kill(pid, SIGUSR2);
+	// 	i++;
+	// }
 }
 
 int main(int argc, char **argv)
