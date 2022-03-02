@@ -6,13 +6,16 @@
 /*   By: ybleiel <ybleiel@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 12:21:46 by ybleiel           #+#    #+#             */
-/*   Updated: 2022/03/01 16:14:28 by ybleiel          ###   ########.fr       */
+/*   Updated: 2022/03/02 16:11:01 by ybleiel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
+
+int	number;
 
 void	ft_putchar(char c)
 {
@@ -45,37 +48,43 @@ void	ft_putnbr(int n)
 	}
 }
 
-void	ft_putstr(char *str)
+void	bin_to_str(int signal)
 {
-	int	i;
+	int			i;
+	static int	counter;
+	static int	n;
 
 	i = 0;
-	while (str[i])
+	if (!n)
+		n = 128;
+	if (signal == SIGUSR1)
 	{
-		write(1, &str[i], 1);
-		i++;
+		i = 1;
+		counter++;
+	}
+	if (signal == SIGUSR2)
+		counter++;
+	if (i == 1)
+		number += n;
+	n = n / 2;
+	if (counter == 8)
+	{
+		ft_putchar(number);
+		number = 0;
+		counter = 0;
+		n = 0;
 	}
 }
 
-static void	sigusr_input1()
+int	main(void)
 {
-	ft_putchar('1');
-}
-
-static void	sigusr_input0()
-{
-	ft_putchar('0');
-}
-
-int main()
-{
-	int pid;
+	int	pid;
 
 	pid = getpid();
 	ft_putnbr(pid);
 	ft_putchar('\n');
-	signal(SIGUSR1, sigusr_input1);
-	signal(SIGUSR2, sigusr_input0);
+	signal(SIGUSR1, bin_to_str);
+	signal(SIGUSR2, bin_to_str);
 	while (1)
 		pause();
 }
